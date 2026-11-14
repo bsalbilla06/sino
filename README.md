@@ -21,6 +21,9 @@ Or install straight from GitHub, without the npm registry:
 opencode plugin add github:bsalbilla06/sino
 ```
 
+`opencode plugin add` writes to the global plugin list. To guard a single project, add
+`"opencode-sino"` to that project's `opencode.json` instead.
+
 Then point sino at a decision model in `opencode.json`:
 
 ```jsonc
