@@ -5,33 +5,25 @@ Decision-model shell arbitration for OpenCode.
 sino scores every shell command the agent proposes against what you asked for, before any process
 starts. It answers one question: **did the user ask for this?**
 
-[![npm](https://img.shields.io/npm/v/opencode-sino?style=flat-square)](https://www.npmjs.com/package/opencode-sino)
-
 ---
 
 ### Installation
-
-```sh
-opencode plugin add opencode-sino
-```
-
-Or install straight from GitHub, without the npm registry:
 
 ```sh
 opencode plugin add github:bsalbilla06/sino
 ```
 
 `opencode plugin add` writes to the global plugin list. To guard a single project, add
-`"opencode-sino"` to that project's `opencode.json` instead.
+`"github:bsalbilla06/sino"` to that project's `opencode.json` instead.
 
-Then point sino at a decision model in `opencode.json`:
+Add options to that entry in `opencode.json`:
 
 ```jsonc
 {
   "$schema": "https://opencode.ai/config.json",
   "plugins": [
     {
-      "package": "opencode-sino",
+      "package": "github:bsalbilla06/sino",
       "options": {
         "transport": "fetch",
         "fetch": {
