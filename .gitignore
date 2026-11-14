@@ -1,0 +1,8 @@
+node_modules/
+.opencode/sino/*.jsonl
+
+# Demo site: not part of the plugin repo.
+site/
+
+# Stale npm lockfile; this project uses bun.
+package-lock.json

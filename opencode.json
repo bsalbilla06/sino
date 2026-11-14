@@ -1,0 +1,32 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugins": [
+    {
+      "package": "./.opencode/plugins/sino",
+      "options": {
+        "enforce": true,
+        "transport": "fetch",
+        "model": {
+          "providerID": "openai",
+          "id": "gpt-6-luna"
+        },
+        "fetch": {
+          "baseURL": "https://api.openai.com/v1",
+          "path": "/decisions",
+          "model": "gpt-6-luna",
+          "apiKeyEnv": "OPENAI_API_KEY",
+          "apiKeyCommand": ["zsh", "-c", "printf %s \"$OPENAI_API_KEY\""]
+        },
+        "timeoutMs": 2000,
+        "allowThreshold": 0.55,
+        "cache": true,
+        "denyOnTripwire": true,
+        "log": {
+          "enabled": true,
+          "storage": true,
+          "file": ".opencode/sino/verdicts.jsonl"
+        }
+      }
+    }
+  ]
+}
