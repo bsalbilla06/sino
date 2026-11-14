@@ -1,17 +1,39 @@
 {
-  "name": "sino",
-  "private": true,
-  "type": "module",
+  "name": "opencode-sino",
   "version": "0.1.0",
-  "description": "Decision-model shell arbitration for OpenCode",
+  "description": "Decision-model shell arbitration for OpenCode: every shell command is scored against the user's request before it runs.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "permissions",
+    "shell",
+    "security",
+    "agent"
+  ],
+  "homepage": "https://github.com/bsalbilla06/sino#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bsalbilla06/sino.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bsalbilla06/sino/issues"
+  },
   "scripts": {
     "test": "bun test test",
     "typecheck": "tsc --noEmit",
     "eval": "bun run test/eval.ts",
-    "sino:export": "bun run .opencode/plugins/sino/export.ts"
+    "audit": "bun run src/export.ts",
+    "prepublishOnly": "bun test test && tsc --noEmit"
   },
   "dependencies": {
-    "@opencode/plugin": "2.3.0"
+    "@opencode/plugin": "^2.3.0"
   },
   "devDependencies": {
     "@types/bun": "latest",

@@ -2,7 +2,7 @@
 /**
  * Print the verdict log as a compact table.
  *
- *   bun run .opencode/plugins/sino/export.ts [path]
+ *   bun run src/export.ts [path]
  */
 
 import { readFile } from "node:fs/promises"

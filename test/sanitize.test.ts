@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { analyzeCommand } from "../.opencode/plugins/sino/sanitize"
+import { analyzeCommand } from "../src/sanitize"
 
 const base = "/Users/test/project"
 const home = "/Users/test"

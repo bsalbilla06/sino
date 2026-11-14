@@ -5,7 +5,7 @@
  *
  *   {
  *     "plugins": [
- *       { "package": "./.opencode/plugins/sino", "options": { ... } }
+ *       { "package": "opencode-sino", "options": { ... } }
  *     ]
  *   }
  */

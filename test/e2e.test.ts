@@ -11,8 +11,8 @@ import { afterAll, beforeAll, describe, expect, test } from "bun:test"
 import { mkdtemp, readFile, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import { createGuard } from "../.opencode/plugins/sino/guard"
-import { loadOptions } from "../.opencode/plugins/sino/options"
+import { createGuard } from "../src/guard"
+import { loadOptions } from "../src/options"
 import { startMockDecisions, type MockDecisions } from "./mock-decisions"
 
 type Hook = (event: any) => unknown

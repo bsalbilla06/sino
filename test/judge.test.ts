@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { parseJudgeAnswers } from "../.opencode/plugins/sino/judge"
+import { parseJudgeAnswers } from "../src/judge"
 
 const options = { allowThreshold: 0.6 }
 

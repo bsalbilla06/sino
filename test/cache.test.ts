@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { SessionCache } from "../.opencode/plugins/sino/cache"
+import { SessionCache } from "../src/cache"
 
 describe("SessionCache", () => {
   test("scopes verdicts to the current user request", () => {

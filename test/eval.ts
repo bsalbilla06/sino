@@ -8,9 +8,9 @@
  * transport the plugin uses, then prints the verdict, reason, and latency.
  */
 
-import { createJudge } from "../.opencode/plugins/sino/judge"
-import { loadOptions } from "../.opencode/plugins/sino/options"
-import { analyzeCommand } from "../.opencode/plugins/sino/sanitize"
+import { createJudge } from "../src/judge"
+import { loadOptions } from "../src/options"
+import { analyzeCommand } from "../src/sanitize"
 
 const options = loadOptions({
   enforce: true,

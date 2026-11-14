@@ -5,7 +5,7 @@
     "": {
       "name": "keytos-hack",
       "dependencies": {
-        "@opencode/plugin": "2.3.0",
+        "@opencode/plugin": "^2.3.0",
       },
       "devDependencies": {
         "@types/bun": "latest",

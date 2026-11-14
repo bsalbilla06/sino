@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
-import { createGuard } from "../.opencode/plugins/sino/guard"
-import { loadOptions } from "../.opencode/plugins/sino/options"
+import { createGuard } from "../src/guard"
+import { loadOptions } from "../src/options"
 
 type Hook = (event: any) => unknown
 

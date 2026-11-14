@@ -13,5 +13,5 @@
     "esModuleInterop": true,
     "resolveJsonModule": true
   },
-  "include": [".opencode/plugins/sino/**/*.ts"]
+  "include": ["src/**/*.ts"]
 }
