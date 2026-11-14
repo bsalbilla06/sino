@@ -35,6 +35,60 @@ export interface Logger {
   log(entry: VerdictLogEntry): Promise<void>
 }
 
+/**
+ * Audit records must stay useful without becoming a credential store. Commands,
+ * prompts, and error strings routinely contain bearer tokens, `KEY=value`
+ * assignments, and URLs with inline credentials, so every string is scrubbed
+ * before it reaches storage or the JSONL mirror.
+ */
+const SECRET_PATTERNS: Array<[RegExp, string]> = [
+  [/\b(Bearer\s+)[A-Za-z0-9._~+/=-]{6,}/gi, "$1[REDACTED]"],
+  [/\bsk-[A-Za-z0-9_-]{8,}/g, "sk-[REDACTED]"],
+  [/\bgh[pousr]_[A-Za-z0-9]{20,}/g, "[REDACTED_GITHUB_TOKEN]"],
+  [/\bgithub_pat_[A-Za-z0-9_]{20,}/g, "[REDACTED_GITHUB_TOKEN]"],
+  [/\bAKIA[0-9A-Z]{16}\b/g, "[REDACTED_AWS_KEY]"],
+  [/\bxox[abprs]-[A-Za-z0-9-]{10,}/g, "[REDACTED_SLACK_TOKEN]"],
+  [/([a-z][a-z0-9+.-]*:\/\/[^\s:/@]+:)([^\s/@]+)(@)/gi, "$1[REDACTED]$3"],
+  [
+    /\b([A-Za-z0-9_]*(?:TOKEN|SECRET|PASSWORD|PASSWD|API_?KEY|ACCESS_KEY|PRIVATE_KEY|CREDENTIAL)[A-Za-z0-9_]*\s*=\s*)('[^']*'|"[^"]*"|[^\s;&|]+)/gi,
+    "$1[REDACTED]",
+  ],
+  [
+    /(--(?:password|passwd|token|secret|api-key|apikey|authorization)(?:=|\s+))('[^']*'|"[^"]*"|[^\s;&|]+)/gi,
+    "$1[REDACTED]",
+  ],
+  [/((?:Authorization|Cookie|Set-Cookie)\s*:\s*)([^"'\r\n]+)/gi, "$1[REDACTED]"],
+]
+
+function redactText(text: string): string {
+  let out = text
+  for (const [pattern, replacement] of SECRET_PATTERNS) {
+    out = out.replace(pattern, replacement)
+  }
+  return out
+}
+
+/** Deep copy with secrets scrubbed, safe for cycles and BigInt values. */
+export function redactLogValue<T>(value: T, seen = new WeakSet<object>()): T {
+  if (typeof value === "string") return redactText(value) as T
+  if (typeof value === "bigint") return value.toString() as T
+  if (Array.isArray(value)) {
+    if (seen.has(value)) return "[circular]" as T
+    seen.add(value)
+    return value.map((item) => redactLogValue(item, seen)) as T
+  }
+  if (value && typeof value === "object") {
+    if (seen.has(value)) return "[circular]" as T
+    seen.add(value)
+    const copy: Record<string, unknown> = {}
+    for (const [key, item] of Object.entries(value)) {
+      copy[key] = redactLogValue(item, seen)
+    }
+    return copy as T
+  }
+  return value
+}
+
 function jsonSafe<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T
 }
@@ -64,11 +118,13 @@ export function createLogger(ctx: any, options: GuardOptions): Logger {
     async log(entry) {
       if (!options.log.enabled) return
 
-      const safe = jsonSafe({
-        ...entry,
-        raw: truncate(entry.raw, 4000),
-        sanitized: entry.sanitized ? truncate(entry.sanitized, 4000) : undefined,
-      })
+      const safe = jsonSafe(
+        redactLogValue({
+          ...entry,
+          raw: truncate(entry.raw, 4000),
+          sanitized: entry.sanitized ? truncate(entry.sanitized, 4000) : undefined,
+        }),
+      )
 
       if (options.log.storage) {
         try {

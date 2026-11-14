@@ -1,0 +1,296 @@
+{
+    "$schema": "https://opencode.ai/config.json",
+    "provider": {
+        "lumen": {
+            "npm": "@ai-sdk/openai-compatible",
+            "name": "Lumen",
+            "options": {
+                "baseURL": "https://lumen.ncsa.illinois.edu/v1",
+                "apiKey": "{env:LUMEN_API_KEY}"
+            },
+            "models": {
+                "beam-1.0": {
+                    "name": "beam-1.0 via Lumen",
+                    "limit": {
+                        "context": 524282,
+                        "output": 131072
+                    },
+                    "cost": {
+                        "input": 0.33,
+                        "output": 1.1
+                    },
+                    "modalities": {
+                        "input": [
+                            "text"
+                        ],
+                        "output": [
+                            "text"
+                        ]
+                    },
+                    "tool_call": false,
+                    "reasoning": true
+                },
+                "deepseek-v4-flash": {
+                    "name": "deepseek-v4-flash via Lumen",
+                    "limit": {
+                        "context": 1048570,
+                        "output": 393216
+                    },
+                    "cost": {
+                        "input": 0.161857,
+                        "output": 0.37146
+                    },
+                    "modalities": {
+                        "input": [
+                            "text"
+                        ],
+                        "output": [
+                            "text"
+                        ]
+                    },
+                    "tool_call": false,
+                    "reasoning": true
+                },
+                "deepseek-v4.1-flash-1017": {
+                    "name": "deepseek-v4.1-flash-1017 via Lumen",
+                    "limit": {
+                        "context": 1048570,
+                        "output": 1048576
+                    },
+                    "cost": {
+                        "input": 0.256856,
+                        "output": 0.930653
+                    },
+                    "modalities": {
+                        "input": [
+                            "text",
+                            "image"
+                        ],
+                        "output": [
+                            "text"
+                        ]
+                    },
+                    "attachment": true,
+                    "tool_call": false,
+                    "reasoning": true
+                },
+                "gemma-4-31b-it": {
+                    "name": "gemma-4-31b-it via Lumen",
+                    "limit": {
+                        "context": 136737,
+                        "output": 32768
+                    },
+                    "cost": {
+                        "input": 0.167931,
+                        "output": 0.436103
+                    },
+                    "modalities": {
+                        "input": [
+                            "text",
+                            "image"
+                        ],
+                        "output": [
+                            "text"
+                        ]
+                    },
+                    "attachment": true,
+                    "tool_call": false,
+                    "reasoning": true
+                },
+                "glm-5.3": {
+                    "name": "glm-5.3 via Lumen",
+                    "limit": {
+                        "context": 524282,
+                        "output": 1048560
+                    },
+                    "cost": {
+                        "input": 1.321413,
+                        "output": 4.248318
+                    },
+                    "modalities": {
+                        "input": [
+                            "text"
+                        ],
+                        "output": [
+                            "text"
+                        ]
+                    },
+                    "tool_call": false,
+                    "reasoning": true
+                },
+                "granite-speech-4.1-2b-plus": {
+                    "name": "granite-speech-4.1-2b-plus via Lumen",
+                    "limit": {
+                        "context": 4096,
+                        "output": 16384
+                    },
+                    "cost": {
+                        "input": 0,
+                        "output": 0
+                    },
+                    "modalities": {
+                        "input": [
+                            "audio"
+                        ]
+                    },
+                    "tool_call": false
+                },
+                "muse-glimmer-30b": {
+                    "name": "muse-glimmer-30b via Lumen",
+                    "limit": {
+                        "context": 131066,
+                        "output": 20480
+                    },
+                    "cost": {
+                        "input": 0.322727,
+                        "output": 1.345455
+                    },
+                    "modalities": {
+                        "input": [
+                            "text",
+                            "image"
+                        ],
+                        "output": [
+                            "text"
+                        ]
+                    },
+                    "attachment": true,
+                    "tool_call": false,
+                    "reasoning": true
+                },
+                "nemotron-3-super-120b-a12b": {
+                    "name": "nemotron-3-super-120b-a12b via Lumen",
+                    "limit": {
+                        "context": 262144,
+                        "output": 262144
+                    },
+                    "cost": {
+                        "input": 0.168636,
+                        "output": 0.759091
+                    },
+                    "modalities": {
+                        "input": [
+                            "text"
+                        ],
+                        "output": [
+                            "text"
+                        ]
+                    },
+                    "tool_call": false,
+                    "reasoning": true
+                },
+                "ornith-1.0-35b": {
+                    "name": "ornith-1.0-35b via Lumen",
+                    "limit": {
+                        "context": 262138,
+                        "output": 256000
+                    },
+                    "cost": {
+                        "input": 0.05,
+                        "output": 0.1
+                    },
+                    "modalities": {
+                        "input": [
+                            "text"
+                        ],
+                        "output": [
+                            "text"
+                        ]
+                    },
+                    "tool_call": false,
+                    "reasoning": true
+                },
+                "qwen3-coder-next": {
+                    "name": "qwen3-coder-next via Lumen",
+                    "limit": {
+                        "context": 131066,
+                        "output": 65536
+                    },
+                    "cost": {
+                        "input": 0.226538,
+                        "output": 1.235846
+                    },
+                    "modalities": {
+                        "input": [
+                            "text"
+                        ],
+                        "output": [
+                            "text"
+                        ]
+                    },
+                    "tool_call": false
+                },
+                "qwen3.6-35b-a3b": {
+                    "name": "qwen3.6-35b-a3b via Lumen",
+                    "limit": {
+                        "context": 262138,
+                        "output": 65536
+                    },
+                    "cost": {
+                        "input": 0.185435,
+                        "output": 1.138217
+                    },
+                    "modalities": {
+                        "input": [
+                            "text",
+                            "image",
+                            "video"
+                        ],
+                        "output": [
+                            "text"
+                        ]
+                    },
+                    "attachment": true,
+                    "tool_call": false,
+                    "reasoning": true
+                },
+                "qwen3.8-27b": {
+                    "name": "qwen3.8-27b via Lumen",
+                    "limit": {
+                        "context": 262138,
+                        "output": 131072
+                    },
+                    "cost": {
+                        "input": 0.364571,
+                        "output": 2.3965
+                    },
+                    "modalities": {
+                        "input": [
+                            "text",
+                            "image"
+                        ],
+                        "output": [
+                            "text"
+                        ]
+                    },
+                    "attachment": true,
+                    "tool_call": false,
+                    "reasoning": true
+                },
+                "qwen3.8-flash": {
+                    "name": "qwen3.8-flash via Lumen",
+                    "limit": {
+                        "context": 262138,
+                        "output": 131072
+                    },
+                    "cost": {
+                        "input": 0.142798,
+                        "output": 0.452902
+                    },
+                    "modalities": {
+                        "input": [
+                            "text",
+                            "image"
+                        ],
+                        "output": [
+                            "text"
+                        ]
+                    },
+                    "attachment": true,
+                    "tool_call": false,
+                    "reasoning": true
+                }
+            }
+        }
+    }
+}

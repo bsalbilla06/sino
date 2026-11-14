@@ -38,11 +38,13 @@ Add options to that entry in `opencode.json`:
 ```
 
 sino needs either a model with the `generate.decisions` capability (`"transport": "plugin"`) or an
-OpenAI-compatible `/decisions` endpoint (`"transport": "fetch"`). With no working credential every
-shell command fails closed. Set `"enforce": false` to watch verdicts without blocking anything.
+OpenAI-compatible `/decisions` endpoint (`"transport": "fetch"`). With `"transport": "fetch"` and no
+working credential, every shell command fails closed; `"auto"` also fails closed when neither
+transport can answer. Set `"enforce": false` to watch verdicts without blocking anything.
 
-This repository's own `opencode.json` loads the plugin from `.`, so a checkout runs against the
-working tree.
+This repository's own `opencode.json` loads the plugin from `./`, so a checkout runs against the
+working tree. Keep the explicit `./` prefix: OpenCode treats a bare `.` as a package specifier and
+tries to npm-install it, which fails and reports "failed to load plugin".
 
 ### How it works
 
@@ -64,7 +66,9 @@ A denial is not a dead end. If the user approves, their message becomes the new 
 command is judged again with that approval as trusted intent. The cache is per request, so retrying
 the identical command inside the same request stays denied.
 
-Timeouts, transport errors, malformed answers, and internal plugin bugs all fail closed.
+Timeouts, transport errors, malformed answers, and internal evaluation errors fail closed. A shell
+permission event with no recoverable command carries no verdict from the plugin and is left to
+OpenCode's own permission policy.
 
 ### Tripwire
 
@@ -83,24 +87,32 @@ Set `"denyOnTripwire": false` to send these commands to the judge instead.
 |---|---|---|
 | `enforce` | `true` | `false` logs verdicts without changing the effect. |
 | `transport` | `"auto"` | `"plugin"`, `"fetch"`, or `"auto"` (plugin, falling back to fetch). |
-| `model` | `opencode/jev-1.13` | Model for the plugin transport. Must support `generate.decisions`. |
+| `model` | `opencode/jev-1.13` | Plugin-transport model (`model.providerID`, `model.id`, optional `model.variant`). Must support `generate.decisions`. |
 | `fetch.baseURL` | `https://api.openai.com/v1` | OpenAI-compatible endpoint root. |
+| `fetch.path` | `/decisions` | Path appended to `fetch.baseURL`. |
 | `fetch.model` | `gpt-6-luna` | Model name sent to `/decisions`. |
 | `fetch.apiKeyEnv` | `OPENAI_API_KEY` | Environment variable holding the key. |
 | `fetch.apiKeyFile` | `null` | File to read the key from when the variable is unset. |
 | `fetch.apiKeyCommand` | `null` | argv that prints the key, e.g. `["zsh", "-c", "printf %s \"$OPENAI_API_KEY\""]`. |
+| `fetch.headers` | `{}` | Extra request headers, merged after `Authorization`. |
 | `timeoutMs` | `2000` | Judge budget; a timeout becomes a deny. |
 | `allowThreshold` | `0.55` | Minimum top probability for an unattended Allow. |
 | `cache` | `true` | Cache verdicts per user request. |
 | `denyOnTripwire` | `true` | Deny tripwire hits without calling the model. |
 | `policy` | built-in | Extra judge policy text. |
 | `log.enabled` | `true` | Write an audit record for every judgment. |
+| `log.storage` | `true` | Mirror records through OpenCode plugin storage. |
 | `log.file` | `.opencode/sino/verdicts.jsonl` | JSONL mirror; `null` disables it. |
+
+Legacy aliases `confidenceFloor` (for `allowThreshold`) and `escalateOnTripwire` (for
+`denyOnTripwire`) are still accepted.
 
 ### Audit log
 
-Every verdict records the raw command, the sanitized line, the parsed scope, the reason, and the
-latency. Print the JSONL log as a table:
+Normal verdict records include the raw command, the sanitized line, the parsed scope, the reason,
+and the latency; observe-mode and `guard_exception` records contain fewer fields. Likely secrets in
+commands, prompts, and errors are redacted before a record is written. Print the JSONL log as a
+table:
 
 ```sh
 bun run audit

@@ -17,13 +17,16 @@ The reason describes the command, not the verdict, so an `Allow` can legitimatel
 
 `allowThreshold` gates on the probability of the winning level, not on the endpoint's `confidence`
 field. That field is not usable as a gate: GPT-6-Luna has returned `confidence: 0.01` for an Allow
-scored `Allow=0.66 / Deny=0.02` with a confidently safe reason, while returning `0.97` for a
-near-certain Allow. Verdicts are deterministic for a given policy and input, so the policy — not
-the threshold — is the place to fix a systematically wrong verdict.
+scored `Allow=0.66 / Deny=0.34` with a confidently safe reason, while returning `0.97` for a
+near-certain Allow. When the endpoint returns no probability distribution, the gate falls back to
+`confidence`. Verdicts are deterministic for a given policy and input, so the policy — not the
+threshold — is the place to fix a systematically wrong verdict.
 
-Every record logs both numbers (`confidence`, the endpoint field, and `probability`, the winning
-level), so calibration stays visible without replaying a command. In live use, routine commands
-land at `0.88`–`1.00`, while a borderline command under a vague request lands near `0.6`.
+Normal verdict records log both numbers (`confidence`, the endpoint field, and `probability`, the
+winning level), so calibration stays visible without replaying a command; observe-mode and
+`guard_exception` records may omit them. Commands, prompts, and error strings are redacted before a
+record is written. In live use, routine commands land at `0.88`–`1.00`, while a borderline command
+under a vague request lands near `0.6`.
 
 ## The deny → ask → retry loop
 
@@ -102,7 +105,8 @@ shell commands. `test/guard.test.ts` asserts that non-shell tools are untouched.
 - There are no static shell deny rules in this setup; the decision model is the gate.
 
 The OpenCode server often does not inherit `~/.zshenv`, so an `apiKeyCommand` probe keeps shell-only
-keys usable. With no credential available, every shell command fails closed. That is the configured
+keys usable. With `"transport": "fetch"` and no credential available, every shell command fails
+closed; `"auto"` behaves the same when the plugin transport cannot answer. That is the configured
 policy, not a bug.
 
 ## Observe mode

@@ -11,13 +11,23 @@ let running: { stop(): Promise<void> } | undefined
 export default Plugin.define({
   id: "sino",
   async setup(ctx) {
-    // The directory can be auto-discovered and also listed in `plugins` for its
-    // options; never register the hooks twice.
-    if (running) return () => running?.stop()
+    // A directory can be auto-discovered and also listed in `plugins` for its
+    // options, and a config reload loads a new instance before disposing the
+    // old one. Keep exactly one guard: a duplicate load replaces the previous
+    // hooks instead of stacking them, and a stale cleanup cannot tear down the
+    // guard that replaced it.
+    if (running) {
+      const previous = running
+      running = undefined
+      await previous.stop()
+    }
 
     const guard = createGuard(ctx, loadOptions(ctx.options))
     await guard.start()
     running = guard
-    return () => guard.stop()
+    return async () => {
+      await guard.stop()
+      if (running === guard) running = undefined
+    }
   },
 })

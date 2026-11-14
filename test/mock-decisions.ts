@@ -80,9 +80,12 @@ export function startMockDecisions(options: MockOptions = {}): MockDecisions {
     },
   })
 
+  const port = server.port
+  if (port === undefined) throw new Error("mock decisions server did not bind a port")
+
   return {
-    url: `http://127.0.0.1:${server.port}/v1`,
-    port: server.port,
+    url: `http://127.0.0.1:${port}/v1`,
+    port,
     requests: () => requests,
     lastBody: () => lastBody,
     stop: () => server.stop(true),
